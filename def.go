@@ -56,7 +56,7 @@ var Usage = func() {
 		ctx.appName = file
 	}
 
-    fmt.Println("Usage: " + ctx.appName + " [OPTIONS] TARGET [ARG...]\n")
+	fmt.Println("Usage: " + ctx.appName + " [OPTIONS] TARGET [ARG...]\n")
 
 	fmt.Println("Options:")
 	for i := 0; i < len(helpInfo); i++ {

@@ -12,9 +12,20 @@ type struct FlagSample {
 ```
 引入本package并调用解析参数的方法，即可在用户定义的struct中填充解析后的值：
 ```
-    import (
-        "github"
-    )
-```
+import (
+    flag "github.com/delfanhao/go-cmd-flag"
+)
 
+func main() {
+	p := CmdLineParam{}
+	flag.SetAppName("Go-cmd-flag")
+	flag.ParseFromPosition(&p, 1)
+	target := flag.GetTarget()   
+	println(flag.Output)
+}    
+```
+编译后测试:
+```
+./sample -o /golang/test.txt
+```
 

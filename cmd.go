@@ -68,7 +68,7 @@ func parseCmdLine() {
 	pos := ctx.startIndex
 
 	state := -1 // 设置为前导参数解析阶段， 遇到第一个不在token后的且不带 - 的token，则认为是target
-	for ; pos < len(os.Args); {
+	for pos < len(os.Args) {
 		token := os.Args[pos]
 		if token[0] == '-' {
 			token = token[1:]
@@ -96,4 +96,3 @@ func showHelp() {
 		os.Exit(0)
 	}
 }
-

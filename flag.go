@@ -78,7 +78,7 @@ func parseDefine(define interface{}) {
 			} else {
 				if req, ok := field.Tag.Lookup(TagRequired); ok {
 					if strings.ToUpper(req) == ValueTrue {
-						panic(fmt.Sprintf("The param %s must specified.", helpMsg.flag ))
+						panic(fmt.Sprintf("The param %s must specified.", helpMsg.flag))
 					}
 				}
 				// 如果用户定义了缺省值，则设置为缺省值
