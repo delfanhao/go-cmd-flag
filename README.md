@@ -59,7 +59,7 @@ func main() {
 	flag.SetAppName("Go-cmd-flag")
 	flag.ParseFromPosition(&p, 1)
 	target := flag.GetTarget()   
-	println(flag.Output)
+	println(p.Output)
 }    
 ```
 编译后测试:
