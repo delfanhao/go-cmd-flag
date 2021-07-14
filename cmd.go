@@ -49,7 +49,7 @@ func processToken(token string, pos int) (int, string, string) {
 		k, v = split(token, ":")
 		step = 1
 	} else {
-		if pos <= len(os.Args)-1 && os.Args[pos+1][0] != '-' {
+		if len(os.Args) > 1 && pos <= len(os.Args)-1 && len(os.Args) > pos+1 && os.Args[pos+1][0] != '-' {
 			step, k, v = 2, token, os.Args[pos+1]
 		} else {
 			step, k, v = 1, token, ""
