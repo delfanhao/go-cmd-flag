@@ -62,11 +62,11 @@ func newDefineStruct() DefineStruct {
 
 //
 func processFlagAndFull(field *reflect.StructField, helpMsg *DefineStruct) (string, string, bool) {
-	tag, full, ok := "", "", false
+	tag, full, ok, fullOk := "", "", false, false
 	tag, ok = field.Tag.Lookup(TagFlag)
 	if ok {
 		helpMsg.flag = tag
-		if full, ok = field.Tag.Lookup(TagFullName); ok {
+		if full, fullOk = field.Tag.Lookup(TagFullName); fullOk {
 			helpMsg.full = full
 		}
 	}

@@ -31,16 +31,6 @@ go get -u github.com/delfan/go-cmd-flag
 
 ## 使用
 
-```
-package main
-
-
-
-```
-
-
-
-
 例, 业务代码中有如下定义：
 
 ```
