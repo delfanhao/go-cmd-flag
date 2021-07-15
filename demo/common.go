@@ -5,4 +5,6 @@ type CmdLineDefine struct {
 	Output  string `flag:"o" full:"output" desc:"Specified output filename" req:"y" valDesc:"filename"`
 	Mode    string `flag:"m" desc:"Specified display mode." default:"text"`
 	LineNum string `flag:"l" desc:"Show number of line."`
+
+	IntValue int `flag:"i" desc:"This is a test property"`
 }
