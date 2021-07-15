@@ -6,4 +6,5 @@ func main() {
 	p := CmdLineDefine{}
 	flag.Parse(&p)
 	println("param output = ", p.Output)
+	println("param intValue = ", p.IntValue)
 }

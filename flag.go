@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -74,12 +75,61 @@ func processFlagAndFull(field *reflect.StructField, helpMsg *DefineStruct) (stri
 	return tag, full, ok
 }
 
+// setValueForType 根据用户定义的类型进行设置值
+func setValueForType(defineValue *reflect.Value, field *reflect.StructField, value string) bool {
+	ok := true
+	setter := defineValue.FieldByName(field.Name)
+	switch setter.Kind() {
+	case reflect.Float32, reflect.Float64:
+		v, err := strconv.ParseFloat(value, 64)
+		if err == nil {
+			setter.SetFloat(v)
+		} else {
+			ok = false
+		}
+
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		v, err := strconv.ParseInt(value, 10, 64)
+		if err == nil {
+			setter.SetInt(v)
+		} else {
+			ok = false
+		}
+
+	case reflect.String:
+		setter.SetString(value)
+
+	case reflect.Bool:
+		v, err := strconv.ParseBool(value)
+		if err == nil {
+			setter.SetBool(v)
+		} else {
+			ok = false
+		}
+
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		v, err := strconv.ParseUint(value, 10, 64)
+		if err == nil {
+			setter.SetUint(v)
+		} else {
+			ok = false
+		}
+
+	default:
+		ok = false
+	}
+
+	return ok
+}
+
 //
 func setValue(tag, full string, field *reflect.StructField, defineValue *reflect.Value, helpMsg *DefineStruct) {
 	value, ok := findOnCmdLine(tag, full)
 	if ok {
-		setter := defineValue.FieldByName(field.Name)
-		setter.SetString(value)
+		if !setValueForType(defineValue, field, value) {
+			fmt.Println(fmt.Sprintf("Invalid value of param and value : %s=%s", tag, value))
+			os.Exit(-1)
+		}
 	} else {
 		if defaultValueTag, ok := field.Tag.Lookup(TagDefault); ok {
 			setter := defineValue.FieldByName(field.Name)
