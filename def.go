@@ -80,8 +80,13 @@ var Usage = func() {
 			line += fmt.Sprintf(" %s", helpInfo[i].valDescription)
 		}
 
+		req := ""
+		if helpInfo[i].required {
+			req = "Required. "
+		}
+
 		if len(helpInfo[i].description) > 0 {
-			line += fmt.Sprintf("\n    %s", helpInfo[i].description)
+			line += fmt.Sprintf("\n    %s%s", req, helpInfo[i].description)
 		}
 		if len(helpInfo[i].defaultVal) > 0 {
 			line += fmt.Sprintf("\n    default value is %s", helpInfo[i].defaultVal)
