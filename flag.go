@@ -132,8 +132,11 @@ func setValue(tag, full string, field *reflect.StructField, defineValue *reflect
 		}
 	} else {
 		if defaultValueTag, ok := field.Tag.Lookup(TagDefault); ok {
-			setter := defineValue.FieldByName(field.Name)
-			setter.SetString(defaultValueTag)
+			if !setValueForType(defineValue, field, defaultValueTag) {
+				panic("Struct definition error.")
+			}
+			//setter := defineValue.FieldByName(field.Name)
+			//setter.SetString(defaultValueTag)
 			helpMsg.defaultVal = defaultValueTag
 		}
 	}
