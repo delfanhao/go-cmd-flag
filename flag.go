@@ -10,6 +10,8 @@ import (
 
 func init() {
 	ctx = CommandLineContext{
+		appName:    "",
+		modules:    make([]string, 0),
 		startIndex: 1,
 		preParams:  make(map[string]string, 0),
 		target:     "",
@@ -19,6 +21,9 @@ func init() {
 
 // Parse 解析用户定义的参数项
 func Parse(define interface{}) {
+	if len(ctx.modules) > 0 {
+		ctx.startIndex = 2
+	}
 	ParseFromPosition(define, ctx.startIndex)
 }
 
@@ -49,6 +54,11 @@ func GetTarget() string {
 	return ctx.target
 }
 
+// SetModules 设置模块名
+func SetModules(mod ...string) {
+	ctx.modules = mod
+}
+
 //
 func newDefineStruct() DefineStruct {
 	return DefineStruct{
@@ -57,6 +67,7 @@ func newDefineStruct() DefineStruct {
 		description:    "",
 		defaultVal:     "",
 		required:       false,
+		arg:            false,
 		valDescription: "",
 	}
 }
@@ -145,9 +156,19 @@ func setValue(tag, full string, field *reflect.StructField, defineValue *reflect
 // checkRequired 检查是否必须的参数
 func checkRequired(helpMsg *DefineStruct, field *reflect.StructField) {
 	req, ok := field.Tag.Lookup(TagRequired)
-	if ok && strings.ToUpper(req) == ValueTrue || strings.ToUpper(req) == ValueYes {
-		helpMsg.required = true
-	}
+	helpMsg.required = ok &&
+		strings.ToUpper(req) == ValueTrue ||
+		strings.ToUpper(req) == ValueYes ||
+		req == Value1
+}
+
+// isArg 判断是否后置参数
+func isArg(field *reflect.StructField) bool {
+	req, ok := field.Tag.Lookup(TagArg)
+	return ok &&
+		strings.ToUpper(req) == ValueTrue ||
+		strings.ToUpper(req) == ValueYes ||
+		req == Value1
 }
 
 func setDesc(field *reflect.StructField, helpMsg *DefineStruct) {
@@ -180,7 +201,11 @@ func parseDefine(define interface{}) {
 			hasRequired = hasRequired || helpMsg.required
 			setValue(tag, full, &field, &defineValue, &helpMsg)
 			setDesc(&field, &helpMsg)
-			helpInfo = append(helpInfo, helpMsg)
+			if !isArg(&field) {
+				preHelpInfo = append(preHelpInfo, helpMsg)
+			} else {
+				sufHelpInfo = append(sufHelpInfo, helpMsg)
+			}
 		}
 	}
 
