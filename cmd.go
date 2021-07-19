@@ -6,18 +6,29 @@ import (
 	"strings"
 )
 
-// findOnCmdLine 在命令行中获取对应的参数,如果存在则返回对应的值及设置ok为true
-func findOnCmdLine(tag string, full string) (string, bool) {
-	if v, ok := ctx.preParams[tag]; ok {
-		delete(ctx.preParams, tag)
-		delete(ctx.preParams, full)
+func findValue(params map[string]string, tag string, full string) (string, bool) {
+	if v, ok := params[tag]; ok {
 		return v, true
 	} else if v, ok := ctx.preParams[full]; ok {
-		delete(ctx.preParams, full)
 		return v, true
 	}
-
 	return "", false
+}
+
+// findOnCmdLine 在命令行中获取对应的参数,如果存在则返回对应的值及设置ok为true
+func findOnCmdLine(tag string, full string, isArg bool) (string, bool) {
+	result, ok := "", false
+	if isArg {
+		result, ok = findValue(ctx.sufParams, tag, full)
+		delete(ctx.sufParams, tag)
+		delete(ctx.sufParams, full)
+	} else {
+		result, ok = findValue(ctx.preParams, tag, full)
+		delete(ctx.preParams, tag)
+		delete(ctx.preParams, full)
+	}
+
+	return result, ok
 }
 
 // split 根据指定分隔符，返回 k,v对，如果不存在分隔符， 则v为空字符串

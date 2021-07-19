@@ -24,6 +24,7 @@ func Parse(define interface{}) {
 	if len(ctx.modules) > 0 {
 		ctx.startIndex = 2
 	}
+
 	ParseFromPosition(define, ctx.startIndex)
 }
 
@@ -59,7 +60,6 @@ func SetModules(mod ...string) {
 	ctx.modules = mod
 }
 
-//
 func newDefineStruct() DefineStruct {
 	return DefineStruct{
 		flag:           "",
@@ -135,7 +135,7 @@ func setValueForType(defineValue *reflect.Value, field *reflect.StructField, val
 
 //
 func setValue(tag, full string, field *reflect.StructField, defineValue *reflect.Value, helpMsg *DefineStruct) {
-	value, ok := findOnCmdLine(tag, full)
+	value, ok := findOnCmdLine(tag, full, helpMsg.arg)
 	if ok {
 		if !setValueForType(defineValue, field, value) {
 			fmt.Println(fmt.Sprintf("Invalid value of param and value : %s=%s", tag, value))
@@ -146,8 +146,6 @@ func setValue(tag, full string, field *reflect.StructField, defineValue *reflect
 			if !setValueForType(defineValue, field, defaultValueTag) {
 				panic("Struct definition error.")
 			}
-			//setter := defineValue.FieldByName(field.Name)
-			//setter.SetString(defaultValueTag)
 			helpMsg.defaultVal = defaultValueTag
 		}
 	}
@@ -199,9 +197,10 @@ func parseDefine(define interface{}) {
 			helpMsg.flag = tag
 			checkRequired(&helpMsg, &field)
 			hasRequired = hasRequired || helpMsg.required
-			setValue(tag, full, &field, &defineValue, &helpMsg)
 			setDesc(&field, &helpMsg)
-			if !isArg(&field) {
+			helpMsg.arg = isArg(&field)
+			setValue(tag, full, &field, &defineValue, &helpMsg)
+			if !helpMsg.arg {
 				preHelpInfo = append(preHelpInfo, helpMsg)
 			} else {
 				sufHelpInfo = append(sufHelpInfo, helpMsg)
@@ -216,7 +215,7 @@ func parseDefine(define interface{}) {
 	}
 
 	// 处理结束后，如果ctx.preParams 中还有元素， 说明是无法解析的参数，报错
-	if len(ctx.preParams) > 0 {
+	if len(ctx.preParams) > 0 || len(ctx.sufParams) > 0 {
 		showUnknownParams()
 	}
 }
@@ -224,8 +223,13 @@ func parseDefine(define interface{}) {
 // showUnknownParams 显示无法解析的命令行参数
 func showUnknownParams() {
 	showHelp()
-	for k, _ := range ctx.preParams {
-		fmt.Println("Unknown param :", k)
+	for p, _ := range ctx.preParams {
+		fmt.Println("Unknown option :", p)
 	}
+
+	for s, _ := range ctx.sufParams {
+		fmt.Println("Unknown arg : ", s)
+	}
+
 	os.Exit(-1)
 }
