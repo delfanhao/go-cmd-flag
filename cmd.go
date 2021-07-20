@@ -9,7 +9,7 @@ import (
 func findValue(params map[string]string, tag string, full string) (string, bool) {
 	if v, ok := params[tag]; ok {
 		return v, true
-	} else if v, ok := ctx.preParams[full]; ok {
+	} else if v, ok := params[full]; ok {
 		return v, true
 	}
 	return "", false
