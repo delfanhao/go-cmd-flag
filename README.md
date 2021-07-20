@@ -46,7 +46,7 @@
 
 ## 安装/更新
 ```
-go get -u github.com/delfan/go-cmd-flag
+go get -u github.com/delfanhao/go-cmd-flag
 ```
 
 ## 使用
@@ -56,7 +56,7 @@ go get -u github.com/delfan/go-cmd-flag
 ```
 type Params struct {
    Output string `flag:"o" full:"output" desc:"Specified output filename."`
-   Repeat int64 `flag:"r" full:"repeat` desc:"Repeat times." arg:"y"`
+   Repeat int64 `flag:"r" full:"repeat" desc:"Repeat times." arg:"y"`
    Str string `flag:"s" full:"str" desc:"Find string." arg:"y"`
 }
 ```
@@ -82,11 +82,11 @@ func main() {
 }    
 ```
 
-## 内置前置参数
+## 内置参数
 
-我们在使用命令行的时候，都会通过使用 -h 或者 --help 来获取应用本身的帮助信息， go-cmd-flag 内置了这部分内容的处理工作，通过您自定义的struct中进行组织并输出。
+我们在使用命令行的时候，都会通过使用 ``-h`` 或者 ``--help`` 来获取应用本身的帮助信息， go-cmd-flag 内置了这部分内容的处理工作，通过您自定义的struct中进行组织并输出。
 
-同样与标准flag包类似，go-cmd-flag 中的Usage函数也被定义为一个闭包， 如果您对自动生成的帮助信息不满意， 可以通过修改Usage的定义来定制话您需要的内容。
+同样与标准flag包类似，go-cmd-flag 中的Usage函数也被定义为一个闭包， 如果您对自动生成的帮助信息不满意， 可以通过修改Usage的定义来定制您需要的内容。
 
 例如:``sample -h -o test.txt``，程序不会有其它动作，只是显示帮助信息然后退出。
 
