@@ -40,7 +40,7 @@
 
 ``findstr --output result.log abc.txt --str=tom --repeat 30``
 
-其中， ``findstr``为命令， ``--oupput result.log``为命令行参数， ``abc.txt`` 为目标， ``--str=tom --repeat 30``为程序参数。
+其中， ``findstr``为命令， ``--output result.log``为命令行参数， ``abc.txt`` 为目标， ``--str=tom --repeat 30``为程序参数。
 
 ``GO-CMD-FLAG``能够很方便的处理以上这些情况。
 
